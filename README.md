@@ -1,13 +1,16 @@
+<a name="readme-top"></a>
+
 <div align="center">
 
 <img src="assets/banner.png" alt="Sentinela, by HelloW Code" width="100%">
+
+**ㅤ**
 
 [![GitHub stars](https://img.shields.io/github/stars/fonsecafns/sentinela?style=flat&label=stars&color=1e2e4d&labelColor=333333)](https://github.com/fonsecafns/sentinela/stargazers)
 [![skill works with 4 agents](https://img.shields.io/badge/skill%20works%20with-4%20agents-ff6729?style=flat&labelColor=333333)](#compatibilidade)
 [![license MIT + BSL](https://img.shields.io/badge/license-MIT%20%2B%20BSL-2ea44f?style=flat&labelColor=333333)](#licença)
 
-**Um auditor de segurança que vive dentro do seu agente de IA.**
-Varre o projeto inteiro, usa ferramentas reais (não memória de LLM) e nunca corrige nada sem sua aprovação.
+**Um auditor de segurança que vive dentro do seu agente de IA. Varre o projeto inteiro, usa ferramentas reais, documenta e sugere mudanças que realmente fazem diferença!**
 
 [O que verifica](#o-que-o-sentinela-verifica) · [Compatibilidade](#compatibilidade) · [Instalação](#instalação) · [Como invocar](#como-invocar) · [O relatório](#o-relatório) · [Licença](#licença)
 
@@ -15,24 +18,24 @@ Varre o projeto inteiro, usa ferramentas reais (não memória de LLM) e nunca co
 
 ---
 
-## Por que o Sentinela existe
+## Por que o Sentinela existe?
 
 A maioria dos "auditores de segurança" que rodam dentro de um agente de IA tem dois problemas: chutam CVEs de memória (que podem nem existir) e corrigem o que acham sem perguntar. O Sentinela resolve os dois. Ele só reporta vulnerabilidade confirmada por ferramenta real ou por leitura de código, nunca aplica uma correção sem você aprovar explicitamente, e trata qualquer texto dentro do projeto auditado (comentários, README, commits) como dado, nunca como instrução, o que fecha a porta pra tentativas de injeção de prompt escondidas no próprio código.
 
 ## O que o Sentinela verifica
 
-- Vulnerabilidades de código no padrão OWASP Top 10 e CWE (SQL injection, validação de dados, controle de acesso, IDOR etc)
-- Dependências desatualizadas, usando ferramentas reais de auditoria (npm audit, pip-audit, osv-scanner e outras conforme a stack), nunca CVEs estimados de memória
-- Segredos expostos no código, incluindo o histórico completo do git, não só o estado atual dos arquivos
-- Autenticação, cookies e sessão
-- CORS, TLS/SSL, HSTS e rate limiting
-- Exposição excessiva de dados (IDs internos, chaves de API, nomes de tabela vazando em respostas)
-- Segredos e dados sensíveis vazando pro código que roda no navegador ou aplicativo do usuário
-- Imagens Docker, containers e infraestrutura como código (Trivy, Checkov)
-- Padrões de código inseguro via SAST (Semgrep), como segunda camada além da leitura manual
-- WAF e proteção anti-bot, adaptado ao provedor de infraestrutura detectado no projeto
-- SSE (Server-Sent Events), quando o projeto usa
-- Sinalização de compliance com LGPD/GDPR quando o projeto coleta dados pessoais
+- Vulnerabilidades de código no padrão OWASP Top 10 e CWE (SQL injection, validação de dados, controle de acesso, IDOR etc);
+- Dependências desatualizadas, usando ferramentas reais de auditoria (npm audit, pip-audit, osv-scanner e outras conforme a stack);
+- Segredos expostos no código, incluindo o histórico completo do git, não só o estado atual dos arquivos;
+- Autenticação, cookies e sessão;
+- CORS, TLS/SSL, HSTS e rate limiting;
+- Exposição excessiva de dados (IDs internos, chaves de API, nomes de tabela vazando em respostas);
+- Segredos e dados sensíveis vazando pro código que roda no navegador ou aplicativos;
+- Imagens Docker, containers e infraestrutura como código (Trivy, Checkov);
+- Padrões de código inseguro via SAST (Semgrep), como segunda camada além da leitura manual;
+- WAF e proteção anti-bot, adaptado ao provedor de infraestrutura detectado no projeto;
+- SSE (Server-Sent Events), quando o projeto usa;
+- Sinalização de compliance com LGPD/GDPR/etc quando o projeto coleta dados pessoais.
 
 A lista completa de categorias e o processo detalhado estão no [`SKILL.md`](SKILL.md). As ferramentas usadas em cada linguagem/ecossistema estão em [`references/ferramentas-por-stack.md`](references/ferramentas-por-stack.md).
 
@@ -138,7 +141,7 @@ Cada auditoria completa gera um arquivo `SECURITY_AUDIT_<data>.md` salvo na raiz
 3. Detalhamento de cada vulnerabilidade: severidade, explicação em linguagem simples de qualquer sigla técnica (CWE, CVE, GHSA), localização exata, descrição do problema, evidência (com qualquer segredo real mascarado) e sugestão de correção
 4. Confirmação das categorias que foram checadas e não tiveram achado
 5. Plano de remediação priorizado em três fases
-6. Nota de compliance (LGPD/GDPR), quando aplicável
+6. Nota de compliance (LGPD/GDPR/etc), quando aplicável
 7. Lembrete pra rodar o Sentinela de novo depois de aplicar as correções, confirmando que tudo foi resolvido
 
 ## Estrutura do repositório
@@ -169,16 +172,26 @@ sentinela/
 
 ## Licença
 
-Licença dividida, no mesmo espírito de projetos como o caveman: a parte que existe pra ser adotada livremente é MIT, a parte que é o valor de verdade do projeto fica protegida por BSL até uma data de conversão.
+Licença dividida. As superfícies de habilidade e adoção são do [MIT](LICENSE-MIT). O tempo de execução vinculado ao mecanismo é disponível no código-fonte **BSL-1.1**, não no código-fonte aberto OSI antes da data de alteração.
 
 **[MIT](LICENSE-MIT)** — o instalador (`install.sh`, `install.ps1`) e o script que gera os adaptadores (`scripts/build_adapters.py`). É só ferramental de distribuição, sem valor competitivo em si, então fica liberado sem restrição.
 
-**[BSL-1.1](LICENSE)** — `SKILL.md` e os adaptadores gerados a partir dele (`AGENTS.md`, `GEMINI.md`, `.cursor/rules/sentinela.mdc`, `references/`, `.sentinela-shared/`, `sentinela.skill`), que são o método de auditoria em si, a parte que o Sentinela existe pra proteger. Source-available: você lê, usa, copia e modifica livremente pra uso pessoal, uso interno na sua empresa, ou pra auditar seus próprios projetos e os de clientes. O que não é permitido sem uma licença comercial separada é oferecer o Sentinela (ou uma versão modificada dele) como produto ou serviço comercial pra terceiros, por exemplo uma plataforma paga concorrente construída em cima dele. Em 2030-08-24 essa parte converte automaticamente pra MIT também, e o projeto inteiro passa a ser Open Source sem essa restrição.
-
-Isso não é uma consultoria jurídica, os termos completos e vinculantes são os dos arquivos [`LICENSE`](LICENSE) e [`LICENSE-MIT`](LICENSE-MIT).
+**[BSL-1.1](LICENSE)** — `SKILL.md` e os adaptadores gerados a partir dele (`AGENTS.md`, `GEMINI.md`, `.cursor/rules/sentinela.mdc`, `references/`, `.sentinela-shared/`, `sentinela.skill`), que são o método de auditoria em si, a parte que o Sentinela existe pra proteger. Source-available: você lê, usa, copia e modifica livremente pra uso pessoal, uso interno na sua empresa, ou pra auditar seus próprios projetos e os de clientes. O que não é permitido sem uma licença comercial separada é oferecer o Sentinela (ou uma versão modificada dele) como produto ou serviço comercial pra terceiros, por exemplo uma plataforma paga concorrente construída em cima dele. Em 24-08-2026 essa parte converte automaticamente pra MIT também, e o projeto inteiro passa a ser Open Source sem essa restrição.
 
 ## Origem
 
-Criado por Matheus, fundador da HelloW Code, uma software house especializada em bots, sistemas web, automações e projetos sob demanda, incluindo auditorias de segurança, revisões de código e testes de vulnerabilidades. Matheus atua como full stack developer, software engineer e AppSec engineer, e criou o Sentinela pra aplicar na própria rotina de desenvolvimento o mesmo rigor de segurança que a HelloW Code leva pros projetos dos clientes.
+Criado por Matheus Fonseca, fundador da HelloW Code, uma software house especializada em bots, sistemas web, automações e projetos sob demanda, incluindo auditorias de segurança, revisões de código e testes de vulnerabilidades. Matheus atua como Full Stack Developer, Software Engineer e AppSec Engineer, e criou o Sentinela pra aplicar na própria rotina de desenvolvimento o mesmo rigor de segurança que a HelloW Code leva pros projetos dos clientes.
 
-Saiba mais sobre a HelloW Code: [@hellowcode](https://instagram.com/hellowcode) no Instagram.
+---
+
+<div align="center">
+
+**Feito por** [<img src="assets/hellowcode-logo-dark.png" alt="HelloW Code" height="18" valign="middle">](https://hellowcode.com.br)
+
+**[Site](https://hellowcode.com.br) · [Instagram](https://instagram.com/hellowcode) · [GitHub](https://github.com/fonsecafns) · [Reportar um problema](https://github.com/fonsecafns/sentinela/issues)**
+
+**Achou útil? Deixa uma ⭐ no repositório.**
+
+**[⬆ Voltar ao topo](#readme-top)**
+
+</div>
