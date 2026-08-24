@@ -2,7 +2,7 @@
 
 <img src="assets/banner.png" alt="Sentinela, by HelloW Code" width="100%">
 
-[![License: BSL 1.1](https://img.shields.io/badge/license-BSL%201.1-914bff?style=flat-square)](LICENSE)
+[![License: MIT + BSL](https://img.shields.io/badge/license-MIT%20%2B%20BSL-914bff?style=flat-square)](#licença)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-compat%C3%ADvel-ff6729?style=flat-square)](#compatibilidade)
 [![Codex CLI](https://img.shields.io/badge/Codex%20CLI-compat%C3%ADvel-ff6729?style=flat-square)](#compatibilidade)
 [![Cursor](https://img.shields.io/badge/Cursor-compat%C3%ADvel-ff6729?style=flat-square)](#compatibilidade)
