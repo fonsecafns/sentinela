@@ -162,18 +162,23 @@ sentinela/
 │   └── build_adapters.py             # regenera os adaptadores a partir do SKILL.md
 ├── assets/
 │   └── banner.png                    # banner deste README
-├── install.sh                        # instalador (macOS/Linux)
-├── install.ps1                       # instalador (Windows)
-├── LICENSE                           # Business Source License 1.1
+├── install.sh                        # instalador (macOS/Linux) — MIT
+├── install.ps1                       # instalador (Windows) — MIT
+├── LICENSE                           # Business Source License 1.1 (SKILL.md e adaptadores)
+├── LICENSE-MIT                       # MIT (instalador e script de build dos adaptadores)
 ├── README.md                         # este arquivo
 └── sentinela.skill                   # pacote pronto (zip), pra instalar direto no Cowork/claude.ai
 ```
 
 ## Licença
 
-[Business Source License 1.1](LICENSE) (BSL). O código fica público e visível, e você pode usar, copiar, modificar e rodar o Sentinela livremente pra uso pessoal, uso interno na sua empresa, ou pra auditar seus próprios projetos e os de clientes. O que não é permitido sem uma licença comercial separada é oferecer o Sentinela (ou uma versão modificada dele) como produto ou serviço comercial pra terceiros, por exemplo uma plataforma paga concorrente construída em cima dele.
+Licença dividida, no mesmo espírito de projetos como o caveman: a parte que existe pra ser adotada livremente é MIT, a parte que é o valor de verdade do projeto fica protegida por BSL até uma data de conversão.
 
-Em 2030-08-24 a licença converte automaticamente pra MIT, e o projeto passa a ser Open Source de verdade, sem essa restrição. Isso não é uma consultoria jurídica, os termos completos e vinculantes são os do arquivo [`LICENSE`](LICENSE).
+**[MIT](LICENSE-MIT)** — o instalador (`install.sh`, `install.ps1`) e o script que gera os adaptadores (`scripts/build_adapters.py`). É só ferramental de distribuição, sem valor competitivo em si, então fica liberado sem restrição.
+
+**[BSL-1.1](LICENSE)** — `SKILL.md` e os adaptadores gerados a partir dele (`AGENTS.md`, `GEMINI.md`, `.cursor/rules/sentinela.mdc`, `references/`, `.sentinela-shared/`, `sentinela.skill`), que são o método de auditoria em si, a parte que o Sentinela existe pra proteger. Source-available: você lê, usa, copia e modifica livremente pra uso pessoal, uso interno na sua empresa, ou pra auditar seus próprios projetos e os de clientes. O que não é permitido sem uma licença comercial separada é oferecer o Sentinela (ou uma versão modificada dele) como produto ou serviço comercial pra terceiros, por exemplo uma plataforma paga concorrente construída em cima dele. Em 2030-08-24 essa parte converte automaticamente pra MIT também, e o projeto inteiro passa a ser Open Source sem essa restrição.
+
+Isso não é uma consultoria jurídica, os termos completos e vinculantes são os dos arquivos [`LICENSE`](LICENSE) e [`LICENSE-MIT`](LICENSE-MIT).
 
 ## Origem
 

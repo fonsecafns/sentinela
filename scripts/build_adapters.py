@@ -14,6 +14,8 @@ Ele gera:
     .sentinela-shared/ferramentas-por-stack.md  (cópia da referência usada pelos três acima)
 
 Não edite os arquivos gerados diretamente, edite o SKILL.md e rode o script de novo.
+
+SPDX-License-Identifier: MIT (veja LICENSE-MIT neste repositório)
 """
 
 import re

@@ -11,6 +11,8 @@
 #   .\install.ps1 -Gemini
 #   .\install.ps1 -Cursor
 #   .\install.ps1 -Project   (instala só no projeto atual, em vez de globalmente)
+#
+# SPDX-License-Identifier: MIT (veja LICENSE-MIT neste repositório)
 
 param(
     [switch]$Claude,

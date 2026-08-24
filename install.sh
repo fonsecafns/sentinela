@@ -15,6 +15,8 @@
 #   curl -fsSL https://raw.githubusercontent.com/fonsecafns/sentinela/main/install.sh | bash -s -- --project
 #
 # Ver todas as opções: passe --help
+#
+# SPDX-License-Identifier: MIT (veja LICENSE-MIT neste repositório)
 
 set -euo pipefail
 
