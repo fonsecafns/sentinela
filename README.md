@@ -9,7 +9,7 @@
 **Um auditor de segurança que vive dentro do seu agente de IA.**
 Varre o projeto inteiro, usa ferramentas reais (não memória de LLM) e nunca corrige nada sem sua aprovação.
 
-[Instalação](#instalação) · [O que verifica](#o-que-o-sentinela-verifica) · [Compatibilidade](#compatibilidade) · [Como invocar](#como-invocar) · [O relatório](#o-relatório) · [Licença](#licença)
+[O que verifica](#o-que-o-sentinela-verifica) · [Compatibilidade](#compatibilidade) · [Instalação](#instalação) · [Como invocar](#como-invocar) · [O relatório](#o-relatório) · [Licença](#licença)
 
 </div>
 
