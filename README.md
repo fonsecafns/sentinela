@@ -2,7 +2,7 @@
 
 <img src="assets/banner.png" alt="Sentinela, by HelloW Code" width="100%">
 
-[![License: MIT](https://img.shields.io/badge/license-MIT-914bff?style=flat-square)](LICENSE)
+[![License: BSL 1.1](https://img.shields.io/badge/license-BSL%201.1-914bff?style=flat-square)](LICENSE)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-compat%C3%ADvel-ff6729?style=flat-square)](#compatibilidade)
 [![Codex CLI](https://img.shields.io/badge/Codex%20CLI-compat%C3%ADvel-ff6729?style=flat-square)](#compatibilidade)
 [![Cursor](https://img.shields.io/badge/Cursor-compat%C3%ADvel-ff6729?style=flat-square)](#compatibilidade)
@@ -164,14 +164,16 @@ sentinela/
 │   └── banner.png                    # banner deste README
 ├── install.sh                        # instalador (macOS/Linux)
 ├── install.ps1                       # instalador (Windows)
-├── LICENSE                           # MIT
+├── LICENSE                           # Business Source License 1.1
 ├── README.md                         # este arquivo
 └── sentinela.skill                   # pacote pronto (zip), pra instalar direto no Cowork/claude.ai
 ```
 
 ## Licença
 
-MIT, veja [`LICENSE`](LICENSE). Use, copie e modifique livremente, mantendo os créditos.
+[Business Source License 1.1](LICENSE) (BSL). O código fica público e visível, e você pode usar, copiar, modificar e rodar o Sentinela livremente pra uso pessoal, uso interno na sua empresa, ou pra auditar seus próprios projetos e os de clientes. O que não é permitido sem uma licença comercial separada é oferecer o Sentinela (ou uma versão modificada dele) como produto ou serviço comercial pra terceiros, por exemplo uma plataforma paga concorrente construída em cima dele.
+
+Em 2030-08-24 a licença converte automaticamente pra MIT, e o projeto passa a ser Open Source de verdade, sem essa restrição. Isso não é uma consultoria jurídica, os termos completos e vinculantes são os do arquivo [`LICENSE`](LICENSE).
 
 ## Origem
 
