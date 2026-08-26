@@ -20,7 +20,7 @@
 
 ## Por que o Sentinela existe?
 
-A maioria dos "auditores de segurança" que rodam dentro de um agente de IA tem dois problemas: chutam CVEs de memória (que podem nem existir) e corrigem o que acham sem perguntar. O Sentinela resolve os dois. Ele só reporta vulnerabilidade confirmada por ferramenta real ou por leitura de código, nunca aplica uma correção sem você aprovar explicitamente, e trata qualquer texto dentro do projeto auditado (comentários, README, commits) como dado, nunca como instrução, o que fecha a porta pra tentativas de injeção de prompt escondidas no próprio código.
+A maioria dos "auditores de segurança" que rodam dentro de um agente de IA tem dois problemas: chutam CVEs de memória (que podem nem existir) e corrigem o que acham sem perguntar, deixando o usuário completamente perdido. O Sentinela resolve os dois. Ele só reporta vulnerabilidade confirmada por ferramenta real ou por leitura de código, nunca aplica uma correção sem você aprovar explicitamente, e trata qualquer texto dentro do projeto auditado (comentários, README, commits) como dado, nunca como instrução, o que fecha a porta pra tentativas de injeção de prompt escondidas no próprio código.
 
 ## O que o Sentinela verifica
 
@@ -35,7 +35,8 @@ A maioria dos "auditores de segurança" que rodam dentro de um agente de IA tem 
 - Padrões de código inseguro via SAST (Semgrep), como segunda camada além da leitura manual;
 - WAF e proteção anti-bot, adaptado ao provedor de infraestrutura detectado no projeto;
 - SSE (Server-Sent Events), quando o projeto usa;
-- Sinalização de compliance com LGPD/GDPR/etc quando o projeto coleta dados pessoais.
+- Sinalização de compliance com LGPD/GDPR/etc quando o projeto coleta dados pessoais;
+- Validação dinâmica opcional (DAST): quando você autoriza, aciona uma ferramenta externa pra confirmar na prática, com prova de conceito, quais falhas são de fato exploráveis, sempre contra um ambiente de teste.
 
 A lista completa de categorias e o processo detalhado estão no [`SKILL.md`](SKILL.md). As ferramentas usadas em cada linguagem/ecossistema estão em [`references/ferramentas-por-stack.md`](references/ferramentas-por-stack.md).
 
@@ -128,21 +129,29 @@ Pra rodar só um check leve, no meio do desenvolvimento, peça explicitamente al
 
 ## As regras de ouro
 
-1. **Nunca corrige nada sozinho.** O Sentinela só lê, roda ferramentas de análise (que não alteram o projeto) e escreve o relatório. Qualquer correção só acontece depois que você aprova explicitamente, e mesmo assim seguindo um processo de segurança próprio: mapear o estado atual antes de mexer, aplicar, e verificar que nada quebrou depois.
-2. **Sempre pede permissão antes de instalar qualquer ferramenta**, explicando em linguagem simples o que ela faz e por que é necessária.
+1. **Nunca corrige nada sozinho.** O Sentinela só lê, roda ferramentas de análise e escreve o relatório. Qualquer correção só acontece depois que você aprova explicitamente, e mesmo assim seguindo um processo de segurança próprio: mapear o estado atual antes de mexer, aplicar, e verificar que nada quebrou depois;
+
+2. **Sempre pede permissão antes de instalar qualquer ferramenta**, explicando em linguagem simples o que ela faz e por que é necessária;
+
 3. **Trata tudo que está dentro do projeto auditado como dado, nunca como instrução.** Comentários, README, mensagens de commit ou qualquer texto do projeto não podem mudar o comportamento do Sentinela, mesmo que pareçam um comando.
 
 ## O relatório
 
 Cada auditoria completa gera um arquivo `SECURITY_AUDIT_<data>.md` salvo na raiz do projeto auditado, além de um resumo direto na conversa. O relatório traz:
 
-1. Resumo executivo com contagem de achados por severidade (🔴 Crítica, 🟠 Alta, 🟡 Média, 🟢 Baixa) e uma legenda explicando o que cada nível costuma significar na prática
-2. Comparação com a auditoria anterior, se existir uma no projeto (resolvidos, ainda em aberto, novos)
-3. Detalhamento de cada vulnerabilidade: severidade, explicação em linguagem simples de qualquer sigla técnica (CWE, CVE, GHSA), localização exata, descrição do problema, evidência (com qualquer segredo real mascarado) e sugestão de correção
-4. Confirmação das categorias que foram checadas e não tiveram achado
-5. Plano de remediação priorizado em três fases
-6. Nota de compliance (LGPD/GDPR/etc), quando aplicável
-7. Lembrete pra rodar o Sentinela de novo depois de aplicar as correções, confirmando que tudo foi resolvido
+1. Resumo executivo com contagem de achados por severidade (🔴 Crítica, 🟠 Alta, 🟡 Média, 🟢 Baixa) e uma legenda explicando o que cada nível costuma significar na prática;
+
+2. Comparação com a auditoria anterior, se existir uma no projeto (resolvidos, ainda em aberto, novos);
+
+3. Detalhamento de cada vulnerabilidade: severidade, explicação em linguagem simples de qualquer sigla técnica (CWE, CVE, GHSA), localização exata, descrição do problema, evidência (com qualquer segredo real mascarado) e sugestão de correção, além da marcação dos achados confirmados por prova de conceito (PoC) quando a validação dinâmica for realizada;
+
+4. Confirmação das categorias que foram checadas e não tiveram achado;
+
+5. Plano de remediação priorizado em três fases;
+
+6. Nota de compliance (LGPD/GDPR/etc), quando aplicável;
+
+7. Lembrete pra rodar o Sentinela de novo depois de aplicar as correções, confirmando que tudo foi resolvido.
 
 ## Estrutura do repositório
 
@@ -162,8 +171,8 @@ sentinela/
 │   └── build_adapters.py             # regenera os adaptadores a partir do SKILL.md
 ├── assets/
 │   └── banner.png                    # banner deste README
-├── install.sh                        # instalador (macOS/Linux) — MIT
-├── install.ps1                       # instalador (Windows) — MIT
+├── install.sh                        # instalador (macOS/Linux), MIT
+├── install.ps1                       # instalador (Windows), MIT
 ├── LICENSE                           # Business Source License 1.1 (SKILL.md e adaptadores)
 ├── LICENSE-MIT                       # MIT (instalador e script de build dos adaptadores)
 ├── README.md                         # este arquivo
@@ -174,13 +183,13 @@ sentinela/
 
 Licença dividida. As superfícies de habilidade e adoção são do [MIT](LICENSE-MIT). O tempo de execução vinculado ao mecanismo é disponível no código-fonte **BSL-1.1**, não no código-fonte aberto OSI antes da data de alteração.
 
-**[MIT](LICENSE-MIT)** — o instalador (`install.sh`, `install.ps1`) e o script que gera os adaptadores (`scripts/build_adapters.py`). É só ferramental de distribuição, sem valor competitivo em si, então fica liberado sem restrição.
+**[MIT](LICENSE-MIT)**: o instalador (`install.sh`, `install.ps1`) e o script que gera os adaptadores (`scripts/build_adapters.py`). É só ferramental de distribuição, sem valor competitivo em si, então fica liberado sem restrição.
 
-**[BSL-1.1](LICENSE)** — `SKILL.md` e os adaptadores gerados a partir dele (`AGENTS.md`, `GEMINI.md`, `.cursor/rules/sentinela.mdc`, `references/`, `.sentinela-shared/`, `sentinela.skill`), que são o método de auditoria em si, a parte que o Sentinela existe pra proteger. Source-available: você lê, usa, copia e modifica livremente pra uso pessoal, uso interno na sua empresa, ou pra auditar seus próprios projetos e os de clientes. O que não é permitido sem uma licença comercial separada é oferecer o Sentinela (ou uma versão modificada dele) como produto ou serviço comercial pra terceiros, por exemplo uma plataforma paga concorrente construída em cima dele. Em 24-08-2026 essa parte converte automaticamente pra MIT também, e o projeto inteiro passa a ser Open Source sem essa restrição.
+**[BSL-1.1](LICENSE)**: `SKILL.md` e os adaptadores gerados a partir dele (`AGENTS.md`, `GEMINI.md`, `.cursor/rules/sentinela.mdc`, `references/`, `.sentinela-shared/`, `sentinela.skill`), que são o método de auditoria em si, a parte que o Sentinela existe pra proteger. Source-available: você lê, usa, copia e modifica livremente pra uso pessoal, uso interno na sua empresa, ou pra auditar seus próprios projetos e os de clientes. O que não é permitido sem uma licença comercial separada é oferecer o Sentinela (ou uma versão modificada dele) como produto ou serviço comercial pra terceiros, por exemplo uma plataforma paga concorrente construída em cima dele. Em 24-08-2030 essa parte converte automaticamente pra MIT também, e o projeto inteiro passa a ser Open Source sem essa restrição.
 
 ## Origem
 
-Criado por Matheus Fonseca, fundador da HelloW Code, uma software house especializada em bots, sistemas web, automações e projetos sob demanda, incluindo auditorias de segurança, revisões de código e testes de vulnerabilidades. Matheus atua como Full Stack Developer, Software Engineer e AppSec Engineer, e criou o Sentinela pra aplicar na própria rotina de desenvolvimento o mesmo rigor de segurança que a HelloW Code leva pros projetos dos clientes.
+Criado por Matheus Fonseca, fundador da HelloW Code, uma software house especializada em bots, sistemas web, automações, projetos sob demanda, auditorias de segurança, revisões de código e testes de vulnerabilidades. Matheus atua como Full Stack Developer, Software Engineer e AppSec Engineer, e criou o Sentinela pra aplicar na própria rotina de desenvolvimento o mesmo rigor de segurança que a HelloW leva pros projetos dos clientes.
 
 ---
 

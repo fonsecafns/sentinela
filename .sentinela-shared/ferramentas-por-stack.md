@@ -80,6 +80,34 @@ Cobre Terraform, Kubernetes, CloudFormation, Dockerfile e outros formatos comuns
 Instalação, se faltar: `pip install checkov --break-system-packages`
 Alternativa: `trivy config .` (o mesmo comando do Trivy usado pra Dockerfile e docker-compose acima também cobre Terraform e Kubernetes, então se o Trivy já foi instalado nessa auditoria, pode reaproveitar em vez de instalar o Checkov também).
 
+## Validação dinâmica (DAST) com o Strix (Fase 4, opcional)
+
+Todas as ferramentas acima são estáticas: elas leem o código, as dependências e a configuração, mas não executam nem atacam a aplicação. A Fase 4 opcional da auditoria usa o Strix pra fazer a parte dinâmica (DAST), confirmando na prática se um achado é mesmo explorável. Esta seção só entra em jogo quando o usuário autorizou explicitamente a Fase 4 (veja a Fase 4 no SKILL.md, que é a fonte da regra: sempre oferecer, sempre pedir autorização, nunca rodar contra produção).
+
+### Strix
+O que é: um pentester ofensivo autônomo e open source (usestrix/strix, licença Apache 2.0). Ele sobe a aplicação num sandbox Docker e tenta explorar as falhas de verdade, entregando um PoC funcional quando consegue.
+
+Pré-requisitos, que devem ser explicados ao usuário ao oferecer a Fase 4:
+- Docker instalado e rodando (o Strix isola a execução dos exploits num container).
+- Uma chave de API de um provedor de LLM (OpenAI, Anthropic, Google e outros), configurada nas variáveis de ambiente que o Strix espera (por exemplo `STRIX_LLM` e `LLM_API_KEY`).
+- Autorização explícita do usuário pra um teste ativo, contra um alvo de staging, de teste ou descartável, nunca produção.
+
+Instalação, se faltar (peça permissão antes, como manda a 2ª regra de ouro): `curl -sSL https://strix.ai/install | bash`. Confirme o comando atual na documentação oficial (docs.strix.ai) antes de rodar, e ofereça ao usuário a opção de instalar manualmente em vez de rodar um script direto da internet.
+
+Comando, sempre no modo de varredura headless e leitura de resultados: `strix -n --target <alvo>`, onde `<alvo>` pode ser um diretório de código local, uma URL de aplicação em staging, ou uma spec de API. O `-n` roda em modo não interativo.
+
+Regras de uso, inegociáveis:
+- Nunca acione a capacidade de correção do Strix (a skill `fix-security-vulnerabilities` dele). Você usa o Strix só pra encontrar e provar, nunca pra corrigir. Toda correção passa pela 1ª regra de ouro do Sentinela: só depois do relatório e da aprovação explícita do usuário, e aplicada por você.
+- Nunca rode contra produção nem contra um alvo que não seja do usuário ou que ele não tenha permissão escrita pra testar. O Strix ataca de verdade e pode alterar o estado do alvo.
+- Avise sobre o custo antes de começar: os loops autônomos consomem bastante token da chave de LLM.
+- Traga os achados e PoCs de volta pro relatório do Sentinela, marcados como confirmados por PoC (campo "Confirmado por PoC" no formato do relatório).
+
+### Nuclei (opção leve de checagem de alvo no ar)
+O que é: um scanner baseado em templates (projectdiscovery/nuclei) que manda requisições contra um alvo no ar pra checar coisas pontuais de infraestrutura e exposição (TLS, HSTS, cabeçalhos de segurança, painéis expostos, templates de CVE conhecido). É bem mais leve e barato que o Strix, e não tenta explorar cadeias complexas: serve como um reforço rápido da categoria "Rede e infraestrutura" da Fase 2 quando existe uma URL no ar.
+Comando: `nuclei -u <url>` (adicione `-t` pra escolher conjuntos de templates específicos).
+Instalação, se faltar: `go install -v github.com/projectdiscovery/nuclei/v3/cmd/nuclei@latest` ou baixe o binário oficial.
+Como o Nuclei manda requisições ao alvo, ele entra sob a mesma regra da Fase 4: só contra alvo autorizado (de preferência staging), com permissão do usuário. Ainda assim é bem menos invasivo que um pentest completo, porque a maioria dos templates só checa exposição, sem explorar.
+
 ## Quando nenhuma ferramenta está disponível e a instalação não é possível
 
 Caia para checagem manual e diga claramente no relatório que essa parte foi feita de forma limitada:
@@ -99,3 +127,5 @@ Use como ponto de partida e adapte ao caso real:
 - Trivy: "isso confere se a imagem do seu container (o pacote completo que roda em produção, incluindo o sistema por baixo do seu código) tem alguma peça desatualizada com falha conhecida, do mesmo jeito que a auditoria de dependências faz pro código, mas olhando a imagem inteira".
 - Semgrep: "isso é um leitor automático de código que já conhece um catálogo de padrões perigosos (tipo um jeito inseguro de montar uma consulta ao banco de dados) e aponta onde esse padrão aparece no seu projeto, como uma segunda checagem além da minha própria leitura".
 - Checkov: "isso confere se os arquivos que descrevem sua infraestrutura (Docker, Kubernetes, Terraform) têm alguma configuração arriscada, do mesmo jeito que um inspetor revisaria a planta de uma obra antes dela ser construída".
+- Strix: "isso é um pentester automático que, em vez de só ler o código, sobe o seu sistema num ambiente isolado e tenta invadir de verdade, do jeito que um atacante faria, pra provar quais falhas são realmente exploráveis. Ele roda contra um ambiente de teste, nunca o de produção, e nunca mexe no seu código".
+- Nuclei: "isso manda algumas checagens automáticas contra o seu site no ar pra ver coisas como certificado, cabeçalhos de segurança e páginas que deveriam estar escondidas, como um inspetor que bate na porta pra ver o que está trancado, sem arrombar nada".
